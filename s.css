@@ -1,185 +1,55 @@
-body {
-  background: #000000;
-  color: #eee;
-  font-family: "Roboto", sans-serif;
-  margin: 0;
-  padding: 0;
-  line-height: 1.1;
+const scrollers = document.querySelectorAll(".scroller");
+if(!window.matchMedia("(prefers-reduced-motion: reduce)").matches){
+    addAnimation();
+}
+function addAnimation(){
+  scrollers.forEach((scroller)=>{
+    scroller.setAttribute("data-animated",true)
+
+    const scrollerInner = scroller.querySelector(".scroller__inner")
+    const scrollerContent = Array.from(scrollerInner.children);
+    scrollerContent.forEach((item)=>{
+const duplicatedItem = item.cloneNode(true)
+duplicatedItem.setAttribute("aria-hidden", true);
+scrollerInner.appendChild(duplicatedItem);
+    })
+  });
 }
 
-#logo {
-  width: 150px;
-  height: auto;
-  display: block;
-  margin: 0 auto;
-  height: auto;
+const slides = document.querySelectorAll(".slide")
+let slideIndex = 0;
+let intervalId = null;
+
+
+document.addEventListener("DOMContentLoaded",initializeSlider)
+
+function initializeSlider(){
+    if(slides.length > 0){
+        slides[slideIndex].classList.add("displaySlide")
+        intervalId = setInterval(nextslide,5000)
+    }
+
 }
 
-header {
-  background-color: #000000;
-  padding: 2%;
-  text-align: center;
-  position: relative;
+function showSlide(index){
+    if(index  >= slides.length){
+        slideIndex = 0;
+    }
+    else if(index < 0){
+        slideIndex = slides.length -1;
+    }
+slides.forEach(slide =>{
+    slide.classList.remove("displaySlide")
+    
+});
+slides[slideIndex].classList.add("displaySlide")
 }
-
-#qimg {
-  margin: 10px 0 auto;
-  max-width: 100%;
-  height: auto;
+function prevslide(){
+    clearInterval(intervalId)
+    slideIndex--;
+    showSlide(slideIndex)
 }
-
-header {
-  background: #000000;
-  padding: 25px;
-  text-align: center;
-  position: relative;
-  border-bottom: 2px solid #444;
-}
-
-header h1 {
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-  margin: 0px;
-  font-size: 2rem;
-  text-shadow: 2px 2px 4px #857e1b;
-}
-
-header button {
-  position: absolute;
-  right: 20px;
-  top: 20px;
-  background: #e50914;
-  border: none;
-  color: #fff;
-  padding: 10px 15px;
-  cursor: pointer;
-  font-size: 1em;
-  border-radius: 5px;
-}
-
-main {
-  padding: 20px;
-  max-width: 800px;
-  margin: 20px auto;
-}
-
-section {
-  margin-bottom: 40px;
-}
-
-section h2,
-section h3 {
-  font-family: "Arial Narrow Bold", sans-serif;
-  color: #e50914;
-  margin-top: 20px;
-  text-shadow: 2px 2px 4px #94260dd6;
-}
-
-p {
-  margin-bottom: 1em;
-  text-align: justify;
-  align-items: center;
-  font-family: "Times New Roman", Times, serif;
-}
-
-footer {
-  background: #1a1a1a;
-  text-align: center;
-  padding: 10px;
-  border-top: 2px solid #444;
-  font-size: 0.9em;
-}
-
-.tag-list {
-  margin: 0;
-  padding-inline: 0;
-  list-style: none;
-}
-.tag-list li {
-  padding: 1rem;
-  background: var(--clr-primary-400);
-  border-radius: 0.5rem;
-  box-shadow: 0.05rem 1rem -0.25rem var(--clr-primary-400);
-}
-
-.scroller {
-  font-family: "Times New Roman", Times, serif;
-  max-width: 600px;
-  overflow: hidden;
-  outline: 3px solid gray;
-}
-.scroller__inner {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-.scroller[data-animated="true"] {
-  border: 0.1px solid lawngreen;
-  overflow: hidden;
-  -webkit-mask: linear-gradient(
-    90deg,
-    transparent,
-    white 20%,
-    white 80%,
-    transparent
-  );
-  mask: linear-gradient(90deg, transparent, white 20%, white 80%, transparent);
-}
-.scroller[data-animated="true"] .scroller__inner {
-  width: max-content;
-  flex-wrap: nowrap;
-  animation: scroll var(--_animation-duration, 40s)
-    var(--_animation-duration, forwards) linear infinite;
-}
-
-.slider {
-  position: relative;
-  width: 100%;
-  max-height: 700px;
-  margin: auto;
-  overflow: hidden;
-}
-.slider img {
-  width: 100%;
-  display: none;
-}
-
-img.displaySlide {
-  display: block;
-  animation-name: fade;
-  animation-duration: 1.5s;
-}
-.slider button {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1rem;
-  background-color: rgba(135, 54, 54, 0.74);
-  color: rgb(183, 170, 170);
-  border: none;
-  cursor: pointer;
-  padding: 10px;
-  border-radius: 100px;
-
-  z-index: 10;
-}
-.prev{
-  left:0px;
-}
-.next{
-  right:0px;
-}
-
-@keyframes fade {
-  from {
-    opacity: 0.5;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes scroll {
-  to {
-    transform: translate(-50%);
-  }
+function nextslide(){
+slideIndex++;
+showSlide(slideIndex)
 }
